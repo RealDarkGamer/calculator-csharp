@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Test
 {
@@ -6,8 +7,160 @@ namespace Test
     {
         static void Main()
         {
+            Console.Title = "C# Calculator - Version 1.1.0";
+            Console.WriteLine("Choose how to process: MANUAL / TXTFILE");
+            Console.WriteLine("    ");
+            String Response = Console.ReadLine().ToUpper();
+            if (Response == "MANUAL")
+            {
+                Console.Title = "C# Calculator - Version 1.1.0 - MANUAL";
+                Input_Get();
+            }
+            else if (Response == "TXTFILE")
+            {
+                Console.Title = "C# Calculator - Version 1.1.0 - TEXT FILE";
+                TXTFile();
+            }
+            else
+            {
+                Console.WriteLine("MANUAL / TXTFILE Was not the response");
+            }
+        }
+        static void TXTFile()
+        {
+            
+            Console.WriteLine("Please put the direct path of the file below. Ex. \"C:\\Users\\Public\\Equation.txt\"");
+            String fileLocation = Console.ReadLine();
+            if (File.Exists(fileLocation))
+            {
+                String[] fileRead = System.IO.File.ReadAllLines(fileLocation);
+                double fileLine = 1;
+                foreach (string line in fileRead)
+                {
+                    string linePosition = "Line" + fileLine;
+                    fileLine = fileLine + 1;
+                }
+                CheckTXTForInput(fileRead);
+            }
+            else
+            {
+                Console.WriteLine("    ");
+                Console.WriteLine("File Path does not exist");
+                Console.WriteLine("    ");
+                TXTFile();
+            }
+            static void CheckTXTForInput(String[] fileRead)
+            {
+                String[] inputValues = { "+", "-", "*", "/", "%" };
+                if (fileRead[0] != inputValues[0])
+                {
+                    if (fileRead[0] != inputValues[1])
+                    {
+                        if (fileRead[0] != inputValues[2])
+                        {
+                            if (fileRead[0] != inputValues[3])
+                            {
+                                if (fileRead[0] != inputValues[4])
+                                {
+                                    Console.WriteLine("    ");
+                                    Console.WriteLine("Character " + fileRead[0] + " is not a valid input");
+                                    Console.WriteLine("Change the first line to one of these characters: +, -, *, /, %");
+                                    Console.WriteLine("    ");
+                                    TXTFile();
+                                }
+                                else
+                                {
+                                    CheckTXTForNums(fileRead);
+                                }
+                            }
+                            else
+                            {
+                                CheckTXTForNums(fileRead);
+                            }
+                        }
+                        else
+                        {
+                            CheckTXTForNums(fileRead);
+                        }
+                    }
+                    else
+                    {
+                        CheckTXTForNums(fileRead);
+                    }
+                }
+                else
+                {
+                    CheckTXTForNums(fileRead);
+                }
+            }
+            static void CheckTXTForNums(String[] fileRead)
+            {
+                double defaultNums = 1;
+                if (double.TryParse(fileRead[1], out defaultNums))
+                {
+                    if (double.TryParse(fileRead[2], out defaultNums))
+                    {
+                        if (double.TryParse(fileRead[3], out defaultNums))
+                        {
+                            if (double.TryParse(fileRead[4], out defaultNums))
+                            {
+                                if (double.TryParse(fileRead[5], out defaultNums))
+                                {
+                                    Console.WriteLine("    ");
+                                    Calculations(Convert.ToDouble(fileRead[1]), Convert.ToDouble(fileRead[2]), Convert.ToDouble(fileRead[3]), Convert.ToDouble(fileRead[4]), Convert.ToDouble(fileRead[5]), fileRead[0]);
+                                    Console.WriteLine("    ");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("    ");
+                                    Console.WriteLine("Character " + fileRead[5] + " is not valid");
+                                    Console.WriteLine("Change the character on the sixth line to a number.");
+                                    Console.WriteLine("    ");
+                                    TXTFile();
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("    ");
+                                Console.WriteLine("Character " + fileRead[4] + " is not valid");
+                                Console.WriteLine("Change the character on the fifth line to a number.");
+                                Console.WriteLine("    ");
+                                TXTFile();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("    ");
+                            Console.WriteLine("Character " + fileRead[3] + " is not valid");
+                            Console.WriteLine("Change the character on the fourth line to a number.");
+                            Console.WriteLine("    ");
+                            TXTFile();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("    ");
+                        Console.WriteLine("Character " + fileRead[2] + " is not valid");
+                        Console.WriteLine("Change the character on the third line to a number.");
+                        Console.WriteLine("    ");
+                        TXTFile();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("    ");
+                    Console.WriteLine("Character " + fileRead[1] + " is not valid");
+                    Console.WriteLine("Change the character on the second line to a number.");
+                    Console.WriteLine("    ");
+                    TXTFile();
+                }
+            }
+        }
+        static void Input_Get()
+        {
+            String inputType = "";
             Console.WriteLine("Input Type (+, -, *, /, %)");
-            string inputType = Console.ReadLine();
+            inputType = Console.ReadLine();
             String[] inputValues = { "+", "-", "*", "/", "%" };
             if (inputType != inputValues[0])
             {
@@ -20,7 +173,7 @@ namespace Test
                             if (inputType != inputValues[4])
                             {
                                 Console.WriteLine("Invalid Input");
-                                Main();
+                                Input_Get();
                             }
                             else
                             {
@@ -47,7 +200,6 @@ namespace Test
                 Num1_Get(0, inputType);
             }
         }
-        
         static void Num1_Get(double defaultValues, String inputType)
         {
             Console.WriteLine("            ");
@@ -69,8 +221,7 @@ namespace Test
                 Num1_Get(defaultValues, inputType);
             }
         }
-
-        static void Num2_Get(double defaultValues, double num1 ,String inputType)
+        static void Num2_Get(double defaultValues, double num1, String inputType)
         {
             Console.WriteLine("            ");
             Console.WriteLine("Please input number 2:");
@@ -91,7 +242,6 @@ namespace Test
                 Num2_Get(defaultValues, num1, inputType);
             }
         }
-
         static void Num3_Get(double defaultValues, double num1, double num2, String inputType)
         {
             Console.WriteLine("            ");
@@ -118,7 +268,6 @@ namespace Test
                 Num3_Get(defaultValues, num1, num2, inputType);
             }
         }
-
         static void Num4_Get(double defaultValues, double num1, double num2, double num3, String inputType)
         {
             Console.WriteLine("            ");
@@ -145,7 +294,6 @@ namespace Test
                 Num5_Get(defaultValues, num1, num2, num3, num4, inputType);
             }
         }
-
         static void Num5_Get(double defaultValues, double num1, double num2, double num3, double num4, String inputType)
         {
             Console.WriteLine("            ");
@@ -222,35 +370,24 @@ namespace Test
                 RunAgain();
             }
         }
-
         static void RunAgain()
         {
             Console.WriteLine("Run another calculation? Y/N");
-            String RunAgain = Console.ReadLine();
-            if (RunAgain == "N")
+            String RunAgain = Console.ReadLine().ToLower();
+            if (RunAgain.Equals("n"))
             {
                 KillApp();
             }
-            else if (RunAgain == "n")
-            {
-                KillApp();
-            }
-            else if (RunAgain == "Y")
-            {
-                Console.Clear();
-                Main();
-            }
-            else if (RunAgain == "y")
+            else if (RunAgain.Equals("y"))
             {
                 Console.Clear();
                 Main();
             }
             else
             {
-                Console.WriteLine("Answer not recognized. Please respond with Y/N");
+                Console.WriteLine("<Console> Answer not recognized. Please respond with Y/N");
             }
         }
-
         static object KillApp()
         {
             Environment.Exit(1);
